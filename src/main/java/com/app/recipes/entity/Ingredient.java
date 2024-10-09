@@ -12,7 +12,7 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ingredient_id_gen")
     @SequenceGenerator(name = "ingredient_id_gen", sequenceName = "ingredient_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -20,11 +20,11 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient")
     private Set<RecipeIngredient> recipeIngredients = new LinkedHashSet<>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

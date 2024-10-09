@@ -15,6 +15,6 @@ public class RecipeDTO {
     private String name;
     private Integer servings;
     private CategoryDTO category; // Reference to CategoryDTO
-    private Set<RecipeIngredientDTO> recipeIngredients; // List of ingredients for this recipe
+    private Set<IngredientDTO> ingredients; // List of ingredients for this recipe
 
 }

@@ -13,6 +13,4 @@ import java.util.Set;
 public class IngredientDTO {
     private Long id;
     private String name;
-    private Set<RecipeIngredientDTO> recipeIngredients;
-
 }

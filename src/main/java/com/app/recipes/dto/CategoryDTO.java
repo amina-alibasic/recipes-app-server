@@ -16,4 +16,11 @@ public class CategoryDTO {
     private String name;
     private Set<RecipeDTO> recipes;
 
+
+    public CategoryDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
 }
