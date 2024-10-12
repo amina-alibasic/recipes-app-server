@@ -6,10 +6,12 @@ CREATE TABLE IF NOT EXISTS category
 
 CREATE TABLE IF NOT EXISTS recipe
 (
-    id          SERIAL PRIMARY KEY,
-    name        VARCHAR(255) NOT NULL,
-    servings    INT          NOT NULL,
-    category_id INT          NOT NULL,
+    id                      SERIAL PRIMARY KEY,
+    name                    VARCHAR(255)                        NOT NULL,
+    servings                INT                                 NOT NULL,
+    category_id             INT                                 NOT NULL,
+    preparation_instruction TEXT                                NOT NULL,
+    date_added              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,5 +31,11 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredient> recipeIngredients = new LinkedHashSet<>();
+
+    @Column(name = "preparation_steps", columnDefinition = "TEXT")
+    private String preparationSteps;
+
+    @Column(name = "date_added", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime dateAdded;
 
 }
