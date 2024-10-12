@@ -3,11 +3,11 @@ package com.app.recipes.controller;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/recipes")
@@ -24,5 +24,11 @@ public class RecipeController {
             @RequestParam(value = "searchValue", required = false) String searchValue) {
         List<RecipeDTO> recipes = recipeService.getAll(orderBy, orderType, searchBy, searchValue);
         return ResponseEntity.ok(recipes);
+    }
+
+    @PostMapping
+    public ResponseEntity<RecipeDTO> saveRecipe(@RequestBody RecipeDTO recipeDTO) {
+        RecipeDTO savedRecipe = recipeService.saveRecipe(recipeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRecipe);
     }
 }

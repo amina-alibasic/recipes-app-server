@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    @Query(value = "SELECT r from Recipe r " +
+    @Query(value = "SELECT r FROM Recipe r " +
             "WHERE (:name IS NULL OR r.name ILIKE %:name%) " +
             "AND (:categoryId IS NULL OR r.category.id = :categoryId) " +
             "ORDER BY " +
@@ -20,5 +20,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
                                @Param("orderType") String orderType,
                                @Param("name") String name,
                                @Param("categoryId") Long categoryId
-                               );
+    );
 }

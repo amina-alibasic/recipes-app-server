@@ -32,8 +32,8 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredient> recipeIngredients = new LinkedHashSet<>();
 
-    @Column(name = "preparation_steps", columnDefinition = "TEXT")
-    private String preparationSteps;
+    @Column(name = "preparation_instruction", columnDefinition = "TEXT")
+    private String preparationInstruction;
 
     @Column(name = "date_added", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dateAdded;

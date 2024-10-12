@@ -1,17 +1,18 @@
 package com.app.recipes.service;
 
-import com.app.recipes.dto.IngredientDTO;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.entity.Category;
 import com.app.recipes.entity.Recipe;
+import com.app.recipes.helper.RecipeMapper;
 import com.app.recipes.repository.CategoryRepository;
+import com.app.recipes.repository.IngredientRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +23,7 @@ public class RecipeService {
 
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -41,23 +43,13 @@ public class RecipeService {
         return mapListToDTO(recipes);
     }
 
-    private RecipeDTO convertToDTO(Recipe recipe) {
-        Set<IngredientDTO> ingredientDTOs = recipe.getRecipeIngredients()
-                .stream()
-                .map(recipeIngredient -> new IngredientDTO(
-                        recipeIngredient.getIngredient().getId(),
-                        recipeIngredient.getIngredient().getName()
-                ))
-                .collect(Collectors.toSet());
-        return new RecipeDTO(
-                recipe.getId(),
-                recipe.getName(),
-                recipe.getServings(),
-                categoryService.getCategoryById(recipe.getCategory().getId()),
-                ingredientDTOs,
-                recipe.getPreparationSteps(),
-                recipe.getDateAdded()
-        );
+    @Transactional
+    public RecipeDTO saveRecipe(RecipeDTO recipeDTO) throws IllegalArgumentException {
+        validateRecipeDTO(recipeDTO);
+        Recipe recipe = RecipeMapper.INSTANCE.toEntity(recipeDTO);
+        recipe.setDateAdded(LocalDateTime.now());
+        recipeRepository.save(recipe);
+        return recipeDTO;
     }
 
     private String validateOrderType(String orderType) {
@@ -72,15 +64,21 @@ public class RecipeService {
         } else return orderBy;
     }
 
-    private String validateSearchBy(String searchBy) {
-        if (!"CATEGORY".equals(searchBy) && !"NAME".equals(searchBy)) {
-            return "NAME"; // Default to NAME if invalid
-        } else return searchBy;
-    }
-
     private List<RecipeDTO> mapListToDTO(List<Recipe> recipes) {
         return recipes.stream()
-                .map(this::convertToDTO)
+                .map(RecipeMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
+    }
+
+    private void validateRecipeDTO(RecipeDTO recipeDTO) throws IllegalArgumentException {
+        if (recipeDTO.getName() == null || recipeDTO.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Recipe name cannot be null or empty.");
+        }
+        if (recipeDTO.getServings() == null || recipeDTO.getServings() <= 0) {
+            throw new IllegalArgumentException("Servings must be a positive number.");
+        }
+        if (recipeDTO.getCategory() == null || recipeDTO.getCategory().getId() == null) {
+            throw new IllegalArgumentException("Category must be provided.");
+        }
     }
 }
