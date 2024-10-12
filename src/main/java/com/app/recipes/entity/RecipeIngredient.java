@@ -1,9 +1,13 @@
 package com.app.recipes.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
@@ -25,37 +29,5 @@ public class RecipeIngredient {
 
     @Column(name = "quantity", nullable = false)
     private String quantity;
-
-    public RecipeIngredientId getId() {
-        return id;
-    }
-
-    public void setId(RecipeIngredientId id) {
-        this.id = id;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
 
 }

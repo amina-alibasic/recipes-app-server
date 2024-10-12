@@ -1,10 +1,12 @@
 package com.app.recipes.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "category")
 public class Category {
@@ -19,18 +21,4 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private Set<Recipe> recipes = new LinkedHashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-
 }
