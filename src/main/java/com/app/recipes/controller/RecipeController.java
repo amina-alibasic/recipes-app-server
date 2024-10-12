@@ -16,32 +16,13 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    /**
-     * Get all recipes ordered alphabetically by name.
-     *
-     * @return a list of RecipeDTOs ordered by name.
-     */
     @GetMapping("/all")
-    public ResponseEntity<List<RecipeDTO>> getAllRecipes() {
-        List<RecipeDTO> recipes = recipeService.getAllRecipesOrderedByName();
-        return ResponseEntity.ok(recipes);
-    }
-
-    /**
-     * Search recipes by name (optional parameter).
-     * If the name is not provided, returns all recipes ordered by name.
-     *
-     * @param name the optional name of the recipe to search.
-     * @return a list of RecipeDTOs matching the search criteria.
-     */
-    @GetMapping("/search")
-    public ResponseEntity<List<RecipeDTO>> searchRecipes(@RequestParam(value = "name", required = false) String name) {
-        List<RecipeDTO> recipes;
-        if (name != null && !name.isEmpty()) {
-            recipes = recipeService.searchRecipesByName(name);
-        } else {
-            recipes = recipeService.getAllRecipesOrderedByName();
-        }
+    public ResponseEntity<List<RecipeDTO>> getAllRecipes(
+            @RequestParam(value = "orderBy", defaultValue = "DATE") String orderBy,
+            @RequestParam(value = "orderType", defaultValue = "DESC") String orderType,
+            @RequestParam(value = "searchBy", required = false) String searchBy,
+            @RequestParam(value = "searchValue", required = false) String searchValue) {
+        List<RecipeDTO> recipes = recipeService.getAll(orderBy, orderType, searchBy, searchValue);
         return ResponseEntity.ok(recipes);
     }
 }
