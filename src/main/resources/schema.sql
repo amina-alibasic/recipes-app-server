@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS recipe
 
 CREATE TABLE IF NOT EXISTS ingredient
 (
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    id       SERIAL PRIMARY KEY,
+    name     VARCHAR(255) NOT NULL,
+    quantity VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS recipe_ingredients
