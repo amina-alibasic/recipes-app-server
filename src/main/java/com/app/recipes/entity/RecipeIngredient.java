@@ -6,12 +6,11 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
-    @SequenceGenerator(name = "recipe_ingredients_id_gen", sequenceName = "recipe_id_seq", allocationSize = 1)
     @EmbeddedId
     private RecipeIngredientId id;
 

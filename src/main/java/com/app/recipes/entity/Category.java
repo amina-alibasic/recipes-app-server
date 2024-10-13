@@ -1,24 +1,24 @@
 package com.app.recipes.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "category")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_id_gen")
-    @SequenceGenerator(name = "category_id_gen", sequenceName = "category_id_seq", allocationSize = 1)
+    @ColumnDefault("nextval('category_id_seq')")
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private Set<Recipe> recipes = new LinkedHashSet<>();
 }

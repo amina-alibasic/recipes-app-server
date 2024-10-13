@@ -3,21 +3,20 @@ package com.app.recipes.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "recipe")
 public class Recipe {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipe_id_gen")
-    @SequenceGenerator(name = "recipe_id_gen", sequenceName = "recipe_id_seq", allocationSize = 1)
+    @ColumnDefault("nextval('recipe_id_seq')")
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,13 +28,11 @@ public class Recipe {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> recipeIngredients = new LinkedHashSet<>();
-
-    @Column(name = "preparation_instruction", columnDefinition = "TEXT")
+    @Column(name = "preparation_instruction", nullable = false, length = Integer.MAX_VALUE)
     private String preparationInstruction;
 
-    @Column(name = "date_added", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "date_added", nullable = false)
     private LocalDateTime dateAdded;
 
 }
