@@ -1,11 +1,10 @@
 package com.app.recipes.service;
 
 import com.app.recipes.dto.RecipeDTO;
-import com.app.recipes.entity.Category;
 import com.app.recipes.entity.Recipe;
 import com.app.recipes.helper.RecipeMapper;
 import com.app.recipes.repository.CategoryRepository;
-import com.app.recipes.repository.IngredientRepository;
+import com.app.recipes.repository.RecipeIngredientsRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,19 +25,15 @@ public class RecipeService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private RecipeIngredientsRepository recipeIngredientsRepository;
+    @Autowired
+    private IngredientService ingredientService;
 
-    public List<RecipeDTO> getAll(String orderBy, String orderType, String searchValue, String categoryName) {
+    public List<RecipeDTO> getAll(String orderBy, String orderType, String searchValue, Long categoryId) {
         //  Validation for ordering
         orderBy = validateOrderBy(orderBy);
         orderType = validateOrderType(orderType);
-        // Check if filtering by category is present
-        Long categoryId = null;
-        if (categoryName != null) {
-            Category category = categoryRepository.getCategoryByName(categoryName);
-            if (category != null) {
-                categoryId = category.getId();
-            }
-        }
         List<Recipe> recipes = recipeRepository.findRecipesBy(orderBy, orderType, searchValue, categoryId);
         return mapListToDTO(recipes);
     }
@@ -67,6 +62,9 @@ public class RecipeService {
     private List<RecipeDTO> mapListToDTO(List<Recipe> recipes) {
         return recipes.stream()
                 .map(RecipeMapper.INSTANCE::toDto)
+                .peek(recipeDTO -> recipeDTO.setIngredients(
+                        ingredientService.getRecipeIngredients(recipeDTO.getId()))
+                )
                 .collect(Collectors.toList());
     }
 

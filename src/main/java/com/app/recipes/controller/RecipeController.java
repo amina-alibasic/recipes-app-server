@@ -20,9 +20,9 @@ public class RecipeController {
     public ResponseEntity<List<RecipeDTO>> getAllRecipes(
             @RequestParam(value = "orderBy", defaultValue = "DATE") String orderBy,
             @RequestParam(value = "orderType", defaultValue = "DESC") String orderType,
-            @RequestParam(value = "searchBy", required = false) String searchBy,
-            @RequestParam(value = "searchValue", required = false) String searchValue) {
-        List<RecipeDTO> recipes = recipeService.getAll(orderBy, orderType, searchBy, searchValue);
+            @RequestParam(value = "searchValue", required = false) String searchValue,
+            @RequestParam(value = "categoryId", required = false) Long categoryId) {
+        List<RecipeDTO> recipes = recipeService.getAll(orderBy, orderType, searchValue, categoryId);
         return ResponseEntity.ok(recipes);
     }
 
