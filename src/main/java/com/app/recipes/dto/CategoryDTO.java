@@ -10,17 +10,12 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CategoryDTO {
-    private Long id;
+    private Integer id;
     private String name;
-    private Set<RecipeDTO> recipes;
 
-
-    public CategoryDTO(Long id, String name) {
+    public CategoryDTO(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
-
-
 }

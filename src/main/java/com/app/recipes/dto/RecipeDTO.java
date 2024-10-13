@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,8 +17,7 @@ public class RecipeDTO {
     private String name;
     private Integer servings;
     private CategoryDTO category;
-    private Set<RecipeIngredientDTO> recipeIngredients;
     private String preparationInstruction;
     private LocalDateTime dateAdded;
-
+    private List<IngredientDTO> ingredients;
 }
