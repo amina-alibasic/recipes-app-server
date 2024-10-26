@@ -18,12 +18,20 @@ public class RecipeController {
 
     @GetMapping("/all")
     public ResponseEntity<List<RecipeDTO>> getAllRecipes(
-            @RequestParam(value = "orderBy", defaultValue = "DATE") String orderBy,
-            @RequestParam(value = "orderType", defaultValue = "DESC") String orderType,
+            @RequestParam(value = "sortBy", defaultValue = "DATE") String sortBy,
+            @RequestParam(value = "sortORder", defaultValue = "DESC") String sortOrder,
             @RequestParam(value = "searchValue", required = false) String searchValue,
-            @RequestParam(value = "categoryId", required = false) Long categoryId) {
-        List<RecipeDTO> recipes = recipeService.getAll(orderBy, orderType, searchValue, categoryId);
+            @RequestParam(value = "categoryId", required = false) Integer categoryId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "20") Integer size) {
+        List<RecipeDTO> recipes = recipeService.getAll(sortBy, sortOrder, searchValue, categoryId, page, size);
         return ResponseEntity.ok(recipes);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RecipeDTO> getRecipeById(@PathVariable("id") Long id) {
+        RecipeDTO recipe = recipeService.getRecipeById(id);
+        return recipe != null ? ResponseEntity.ok(recipe) : ResponseEntity.notFound().build();
     }
 
     @PostMapping

@@ -3,15 +3,18 @@ package com.app.recipes.service;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.entity.Recipe;
 import com.app.recipes.helper.RecipeMapper;
-import com.app.recipes.repository.CategoryRepository;
-import com.app.recipes.repository.RecipeIngredientsRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,13 +22,30 @@ public class RecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+    @Autowired
+    private IngredientService ingredientService;
+    @Autowired
+    private CategoryService categoryService;
 
-    public List<RecipeDTO> getAll(String orderBy, String orderType, String searchValue, Long categoryId) {
+    public List<RecipeDTO> getAll(String sortBy, String sortOrder, String searchValue, Integer categoryId, Integer page, Integer size) {
         //  Validation for ordering
-        orderBy = validateOrderBy(orderBy);
-        orderType = validateOrderType(orderType);
-        List<Recipe> recipes = recipeRepository.findRecipesBy(orderBy, orderType, searchValue, categoryId);
+        sortOrder = validateSortOrder(sortOrder);
+        sortBy = validateSortBy(sortBy);
+        // Handle sorting (filtering) and lazy loading
+        Sort sort = Sort.by(sortOrder, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Recipe> recipes = recipeRepository.findRecipesBy(searchValue, categoryId, pageable);
         return mapListToDTO(recipes);
+    }
+
+    public RecipeDTO getRecipeById(Long id) {
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        if (recipe.isPresent()) {
+            RecipeDTO recipeDTO = RecipeMapper.INSTANCE.toDto(recipe.get());
+            recipeDTO.setIngredients(ingredientService.getRecipeIngredients(recipeDTO.getId()));
+            return recipeDTO;
+        }
+        return null;
     }
 
     @Transactional
@@ -37,22 +57,22 @@ public class RecipeService {
         return recipeDTO;
     }
 
-    private String validateOrderType(String orderType) {
-        if (!"ASC".equals(orderType) && !"DESC".equals(orderType)) {
+    private String validateSortOrder(String sortOrder) {
+        if (!"ASC".equals(sortOrder) && !"DESC".equals(sortOrder)) {
             return "DESC"; // Default to DESC if invalid
-        } else return orderType;
+        } else return sortOrder;
     }
 
-    private String validateOrderBy(String orderBy) {
-        if (!"NAME".equals(orderBy) && !"DATE".equals(orderBy)) {
+    private String validateSortBy(String sortBy) {
+        if (!"NAME".equals(sortBy) && !"DATE".equals(sortBy)) {
             return "DATE"; // Default to DATE if invalid
-        } else return orderBy;
+        } else return sortBy;
     }
 
-    private List<RecipeDTO> mapListToDTO(List<Recipe> recipes) {
+    private List<RecipeDTO> mapListToDTO(Page<Recipe> recipes) {
         return recipes.stream()
                 .map(RecipeMapper.INSTANCE::toDto)
-                // no need to set ingredients on get all recipes
+                // no need to set ingredients on get all recipes (for now)
 //                .peek(recipeDTO -> recipeDTO.setIngredients(
 //                        ingredientService.getRecipeIngredients(recipeDTO.getId()))
 //                )
@@ -68,6 +88,9 @@ public class RecipeService {
         }
         if (recipeDTO.getCategory() == null || recipeDTO.getCategory().getId() == null) {
             throw new IllegalArgumentException("Category must be provided.");
+        }
+        if(categoryService.getCategoryByName(recipeDTO.getCategory().getName()) == null) {
+            throw new IllegalArgumentException("Category does not exist.");
         }
     }
 }
