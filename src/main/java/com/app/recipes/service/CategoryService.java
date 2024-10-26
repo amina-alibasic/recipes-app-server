@@ -1,8 +1,13 @@
 package com.app.recipes.service;
 
 import com.app.recipes.dto.CategoryDTO;
+import com.app.recipes.entity.Category;
+import com.app.recipes.helper.CategoryMapper;
 import com.app.recipes.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -13,9 +18,21 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    public List<CategoryDTO> getAllCategories() {
+        return mapListToDTO(categoryRepository.findAll());
+    }
+
     public CategoryDTO getCategoryById(Long id) {
-        return categoryRepository.findById(id)
-                .map(category -> new CategoryDTO(category.getId(), category.getName()))
-                .orElse(null);
+        return CategoryMapper.INSTANCE.toDto(categoryRepository.findById(id).orElse(null));
+    }
+
+    public CategoryDTO getCategoryByName(String name) {
+        return CategoryMapper.INSTANCE.toDto(categoryRepository.findCategoryByName(name));
+    }
+
+    private List<CategoryDTO> mapListToDTO(List<Category> categories) {
+        return categories.stream()
+                .map(CategoryMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
     }
 }
