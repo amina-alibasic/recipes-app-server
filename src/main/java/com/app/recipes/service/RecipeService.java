@@ -20,16 +20,6 @@ public class RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
 
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private RecipeIngredientsRepository recipeIngredientsRepository;
-    @Autowired
-    private IngredientService ingredientService;
-
     public List<RecipeDTO> getAll(String orderBy, String orderType, String searchValue, Long categoryId) {
         //  Validation for ordering
         orderBy = validateOrderBy(orderBy);
@@ -62,9 +52,10 @@ public class RecipeService {
     private List<RecipeDTO> mapListToDTO(List<Recipe> recipes) {
         return recipes.stream()
                 .map(RecipeMapper.INSTANCE::toDto)
-                .peek(recipeDTO -> recipeDTO.setIngredients(
-                        ingredientService.getRecipeIngredients(recipeDTO.getId()))
-                )
+                // no need to set ingredients on get all recipes
+//                .peek(recipeDTO -> recipeDTO.setIngredients(
+//                        ingredientService.getRecipeIngredients(recipeDTO.getId()))
+//                )
                 .collect(Collectors.toList());
     }
 

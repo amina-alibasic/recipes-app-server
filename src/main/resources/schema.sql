@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS category
 
 CREATE TABLE IF NOT EXISTS recipe
 (
-    id                      SERIAL PRIMARY KEY,
+    id                      BIGSERIAL PRIMARY KEY,
     name                    VARCHAR(255)                        NOT NULL,
     servings                INT                                 NOT NULL,
     category_id             INT                                 NOT NULL,
@@ -17,15 +17,15 @@ CREATE TABLE IF NOT EXISTS recipe
 
 CREATE TABLE IF NOT EXISTS ingredient
 (
-    id       SERIAL PRIMARY KEY,
+    id       BIGSERIAL PRIMARY KEY,
     name     VARCHAR(255) NOT NULL,
     quantity VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS recipe_ingredients
 (
-    recipe_id     INT          NOT NULL,
-    ingredient_id INT          NOT NULL,
+    recipe_id     BIGINT          NOT NULL,
+    ingredient_id BIGINT          NOT NULL,
     quantity      VARCHAR(255) NOT NULL,
     PRIMARY KEY (recipe_id, ingredient_id),
     FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE,

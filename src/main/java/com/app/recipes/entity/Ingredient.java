@@ -16,7 +16,7 @@ public class Ingredient {
     @Id
     @ColumnDefault("nextval('ingredient_id_seq')")
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
