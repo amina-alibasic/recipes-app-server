@@ -19,12 +19,12 @@ public class RecipeController {
     @GetMapping("/all")
     public ResponseEntity<List<RecipeDTO>> getAllRecipes(
             @RequestParam(value = "sortBy", defaultValue = "DATE") String sortBy,
-            @RequestParam(value = "sortORder", defaultValue = "DESC") String sortOrder,
+            @RequestParam(value = "sortOrder", defaultValue = "DESC") String sortOrder,
             @RequestParam(value = "searchValue", required = false) String searchValue,
-            @RequestParam(value = "categoryId", required = false) Integer categoryId,
+            @RequestParam(value = "categoryIds", required = false) List<Integer> categoryIds,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size) {
-        List<RecipeDTO> recipes = recipeService.getAll(sortBy, sortOrder, searchValue, categoryId, page, size);
+        List<RecipeDTO> recipes = recipeService.getAll(sortBy, sortOrder, searchValue, categoryIds, page, size);
         return ResponseEntity.ok(recipes);
     }
 

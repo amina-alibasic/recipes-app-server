@@ -27,7 +27,7 @@ public class RecipeService {
     @Autowired
     private CategoryService categoryService;
 
-    public List<RecipeDTO> getAll(String sortBy, String sortOrder, String searchValue, Integer categoryId, Integer page, Integer size) {
+    public List<RecipeDTO> getAll(String sortBy, String sortOrder, String searchValue, List<Integer> categoryIds, Integer page, Integer size) {
         //  Validation for ordering
         sortOrder = validateSortOrder(sortOrder);
         sortBy = validateSortBy(sortBy);
@@ -35,7 +35,7 @@ public class RecipeService {
         Sort.Direction direction = Sort.Direction.fromString(sortOrder);
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Recipe> recipes = recipeRepository.findRecipesBy(searchValue, categoryId, pageable);
+        Page<Recipe> recipes = recipeRepository.findRecipesBy(searchValue, categoryIds, pageable);
         return mapListToDTO(recipes.getContent());
     }
 
