@@ -23,15 +23,15 @@ public class Recipe {
     @Column(name = "servings", nullable = false)
     private Integer servings;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
     @Column(name = "preparation_instruction", nullable = false, length = Integer.MAX_VALUE)
     private String preparationInstruction;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "date_added", nullable = false)
-    private LocalDateTime dateAdded;
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
 
 }

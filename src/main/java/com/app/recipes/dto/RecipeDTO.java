@@ -18,6 +18,6 @@ public class RecipeDTO {
     private Integer servings;
     private CategoryDTO category;
     private String preparationInstruction;
-    private LocalDateTime dateAdded;
+    private LocalDateTime date;
     private List<IngredientDTO> ingredients;
 }

@@ -1,12 +1,11 @@
 package com.app.recipes.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +20,6 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "category")
+    private List<Recipe> recipes;
 }

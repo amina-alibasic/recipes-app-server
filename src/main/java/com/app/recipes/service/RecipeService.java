@@ -32,10 +32,11 @@ public class RecipeService {
         sortOrder = validateSortOrder(sortOrder);
         sortBy = validateSortBy(sortBy);
         // Handle sorting (filtering) and lazy loading
-        Sort sort = Sort.by(sortOrder, sortBy);
+        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
+        Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Recipe> recipes = recipeRepository.findRecipesBy(searchValue, categoryId, pageable);
-        return mapListToDTO(recipes);
+        return mapListToDTO(recipes.getContent());
     }
 
     public RecipeDTO getRecipeById(Long id) {
@@ -52,7 +53,7 @@ public class RecipeService {
     public RecipeDTO saveRecipe(RecipeDTO recipeDTO) throws IllegalArgumentException {
         validateRecipeDTO(recipeDTO);
         Recipe recipe = RecipeMapper.INSTANCE.toEntity(recipeDTO);
-        recipe.setDateAdded(LocalDateTime.now());
+        recipe.setDate(LocalDateTime.now());
         recipeRepository.save(recipe);
         return recipeDTO;
     }
@@ -64,12 +65,12 @@ public class RecipeService {
     }
 
     private String validateSortBy(String sortBy) {
-        if (!"NAME".equals(sortBy) && !"DATE".equals(sortBy)) {
-            return "DATE"; // Default to DATE if invalid
+        if (!"name".equals(sortBy) && !"date".equals(sortBy)) {
+            return "date"; // Default to DATE if invalid
         } else return sortBy;
     }
 
-    private List<RecipeDTO> mapListToDTO(Page<Recipe> recipes) {
+    private List<RecipeDTO> mapListToDTO(List<Recipe> recipes) {
         return recipes.stream()
                 .map(RecipeMapper.INSTANCE::toDto)
                 // no need to set ingredients on get all recipes (for now)
@@ -89,7 +90,7 @@ public class RecipeService {
         if (recipeDTO.getCategory() == null || recipeDTO.getCategory().getId() == null) {
             throw new IllegalArgumentException("Category must be provided.");
         }
-        if(categoryService.getCategoryByName(recipeDTO.getCategory().getName()) == null) {
+        if (categoryService.getCategoryByName(recipeDTO.getCategory().getName()) == null) {
             throw new IllegalArgumentException("Category does not exist.");
         }
     }

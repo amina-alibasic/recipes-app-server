@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS recipe
     servings                INT                                 NOT NULL,
     category_id             INT                                 NOT NULL,
     preparation_instruction TEXT                                NOT NULL,
-    date_added              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    date              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 

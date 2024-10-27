@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query(value = "SELECT r FROM Recipe r " +
-            "WHERE (:name IS NULL OR r.name ILIKE %:name%) " +
+            "WHERE (:name IS NULL OR r.name ILIKE :name) " +
             "AND (:categoryId IS NULL OR r.category.id = :categoryId)"
     )
     Page<Recipe> findRecipesBy(@Param("name") String name,
