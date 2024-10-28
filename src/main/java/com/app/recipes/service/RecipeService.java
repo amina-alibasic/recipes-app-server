@@ -31,6 +31,8 @@ public class RecipeService {
         //  Validation for ordering
         sortOrder = validateSortOrder(sortOrder);
         sortBy = validateSortBy(sortBy);
+        // Format search value for the query
+        searchValue = searchValue != null && !searchValue.isEmpty() ? '%' + searchValue + '%' : null;
         // Handle sorting (filtering) and lazy loading
         Sort.Direction direction = Sort.Direction.fromString(sortOrder);
         Sort sort = Sort.by(direction, sortBy);
