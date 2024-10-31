@@ -18,7 +18,7 @@ public class RecipeController {
 
     @GetMapping("/all")
     public ResponseEntity<List<RecipeDTO>> getAllRecipes(
-            @RequestParam(value = "sortBy", defaultValue = "DATE") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "date") String sortBy,
             @RequestParam(value = "sortOrder", defaultValue = "DESC") String sortOrder,
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "categoryIds", required = false) List<Integer> categoryIds,

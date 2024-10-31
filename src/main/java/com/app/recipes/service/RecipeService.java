@@ -68,7 +68,7 @@ public class RecipeService {
 
     private String validateSortBy(String sortBy) {
         if (!"name".equals(sortBy) && !"date".equals(sortBy)) {
-            return "date"; // Default to DATE if invalid
+            return "date"; // Default to date if invalid
         } else return sortBy;
     }
 
