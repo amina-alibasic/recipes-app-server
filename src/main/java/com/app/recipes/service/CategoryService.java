@@ -30,6 +30,11 @@ public class CategoryService {
         return CategoryMapper.INSTANCE.toDto(categoryRepository.findCategoryByName(name));
     }
 
+    public void createCategory(CategoryDTO categoryDTO) {
+        Category category = CategoryMapper.INSTANCE.toEntity(categoryDTO);
+        categoryRepository.save(category);
+    }
+
     private List<CategoryDTO> mapListToDTO(List<Category> categories) {
         return categories.stream()
                 .map(CategoryMapper.INSTANCE::toDto)

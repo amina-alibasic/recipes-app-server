@@ -1,8 +1,10 @@
 package com.app.recipes.service;
 
+import com.app.recipes.dto.CategoryDTO;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.entity.Recipe;
 import com.app.recipes.helper.RecipeMapper;
+import com.app.recipes.repository.CategoryRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ public class RecipeService {
     private IngredientService ingredientService;
     @Autowired
     private CategoryService categoryService;
+    private CategoryRepository categoryRepository;
 
     public List<RecipeDTO> getAll(String sortBy, String sortOrder, String searchValue, List<Integer> categoryIds, Integer page, Integer size) {
         //  Validation for ordering
@@ -54,8 +57,16 @@ public class RecipeService {
     @Transactional
     public RecipeDTO saveRecipe(RecipeDTO recipeDTO) throws IllegalArgumentException {
         validateRecipeDTO(recipeDTO);
+        if(recipeDTO.getCategory().getId() == null) {
+            // new category being created with the recipe
+            CategoryDTO newCategory = new CategoryDTO();
+            newCategory.setName(recipeDTO.getCategory().getName());
+            categoryService.createCategory(newCategory);
+        }
         Recipe recipe = RecipeMapper.INSTANCE.toEntity(recipeDTO);
         recipe.setDate(LocalDateTime.now());
+
+        // save recipe ingredients additionally
         recipeRepository.save(recipe);
         return recipeDTO;
     }
@@ -86,14 +97,14 @@ public class RecipeService {
         if (recipeDTO.getName() == null || recipeDTO.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Recipe name cannot be null or empty.");
         }
-        if (recipeDTO.getServings() == null || recipeDTO.getServings() <= 0) {
-            throw new IllegalArgumentException("Servings must be a positive number.");
+        if (recipeDTO.getServings() == null || recipeDTO.getServings() < 1) {
+            throw new IllegalArgumentException("Servings must be a number greater than 1.");
         }
         if (recipeDTO.getCategory() == null || recipeDTO.getCategory().getId() == null) {
             throw new IllegalArgumentException("Category must be provided.");
         }
-        if (categoryService.getCategoryByName(recipeDTO.getCategory().getName()) == null) {
-            throw new IllegalArgumentException("Category does not exist.");
+        if(recipeDTO.getPreparationInstruction() == null || recipeDTO.getPreparationInstruction().trim().isEmpty()) {
+            throw new IllegalArgumentException("Preparation instructions cannot be null or empty.");
         }
     }
 }
