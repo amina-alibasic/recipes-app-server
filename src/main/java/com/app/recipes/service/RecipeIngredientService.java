@@ -40,18 +40,24 @@ public class RecipeIngredientService {
         for (IngredientDTO ingredientDTO : recipeDTO.getIngredients()) {
             if (!ingredientService.isIngredientPresent(ingredientDTO)) {
                 // ingredient not present - create a new Ingredient record
+                String ingredientQuantity = ingredientDTO.getQuantity();
                 Ingredient ingredient = new Ingredient();
                 ingredient.setName(ingredientDTO.getName());
-                ingredient.setQuantity(ingredientDTO.getQuantity());
+                ingredient.setQuantity(ingredientQuantity);
                 ingredientRepository.save(ingredient);
                 // set new ingredient to the RecipeIngredient record
                 recipeIngredient.setIngredient(ingredient);
-                recipeIngredient.setQuantity(ingredient.getQuantity());
+                recipeIngredient.setQuantity(ingredientQuantity);
                 // set new ingredient id
                 recipeIngredientId.setIngredientId(ingredient.getId());
             } else {
                 // ingredient already present in the DB
-                recipeIngredient.setIngredient(IngredientMapper.INSTANCE.toEntity(ingredientDTO));
+                // find it
+                Ingredient ingredient = ingredientRepository.findByName(ingredientDTO.getName());
+                ingredient.setQuantity(ingredientDTO.getQuantity());
+                recipeIngredient.setIngredient(ingredient);
+                // set the quantity from recipe - not from ingredient table
+                recipeIngredient.setQuantity(ingredientDTO.getQuantity());
                 // set existing ingredient id
                 recipeIngredientId.setIngredientId(ingredientDTO.getId());
             }
