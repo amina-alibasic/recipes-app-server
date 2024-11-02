@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private RecipeIngredientId id;
 
     @MapsId("recipeId")

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "recipe")
 public class Recipe {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDefault("nextval('recipe_id_seq')")
     @Column(name = "id", nullable = false)
     private Long id;
