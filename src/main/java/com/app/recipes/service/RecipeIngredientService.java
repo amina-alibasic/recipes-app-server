@@ -3,17 +3,14 @@ package com.app.recipes.service;
 import com.app.recipes.dto.IngredientDTO;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.entity.Ingredient;
-import com.app.recipes.entity.Recipe;
 import com.app.recipes.entity.RecipeIngredient;
 import com.app.recipes.entity.RecipeIngredientId;
-import com.app.recipes.helper.IngredientMapper;
 import com.app.recipes.helper.RecipeMapper;
 import com.app.recipes.repository.IngredientRepository;
 import com.app.recipes.repository.RecipeIngredientsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class RecipeIngredientService {
@@ -38,9 +35,9 @@ public class RecipeIngredientService {
 
         // for every ingredient, check if it exists in the database already (checking by name)
         for (IngredientDTO ingredientDTO : recipeDTO.getIngredients()) {
+            String ingredientQuantity = ingredientDTO.getQuantity();
             if (!ingredientService.isIngredientPresent(ingredientDTO)) {
                 // ingredient not present - create a new Ingredient record
-                String ingredientQuantity = ingredientDTO.getQuantity();
                 Ingredient ingredient = new Ingredient();
                 ingredient.setName(ingredientDTO.getName());
                 ingredient.setQuantity(ingredientQuantity);
@@ -54,10 +51,10 @@ public class RecipeIngredientService {
                 // ingredient already present in the DB
                 // find it
                 Ingredient ingredient = ingredientRepository.findByName(ingredientDTO.getName());
-                ingredient.setQuantity(ingredientDTO.getQuantity());
+                ingredient.setQuantity(ingredientQuantity);
                 recipeIngredient.setIngredient(ingredient);
                 // set the quantity from recipe - not from ingredient table
-                recipeIngredient.setQuantity(ingredientDTO.getQuantity());
+                recipeIngredient.setQuantity(ingredientQuantity);
                 // set existing ingredient id
                 recipeIngredientId.setIngredientId(ingredientDTO.getId());
             }
