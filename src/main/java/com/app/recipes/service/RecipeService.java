@@ -6,6 +6,7 @@ import com.app.recipes.entity.Recipe;
 import com.app.recipes.helper.CategoryMapper;
 import com.app.recipes.helper.RecipeMapper;
 import com.app.recipes.repository.CategoryRepository;
+import com.app.recipes.repository.RecipeIngredientsRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,8 @@ public class RecipeService {
     private RecipeIngredientService recipeIngredientService;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private RecipeIngredientsRepository recipeIngredientsRepository;
 
     public List<RecipeDTO> getAll(String sortBy, String sortOrder, String searchValue, List<Integer> categoryIds, Integer page, Integer size) {
         //  Validation for ordering
@@ -79,6 +82,14 @@ public class RecipeService {
         recipeIngredientService.saveRecipeIngredients(recipeDTO);
 
         return recipeDTO;
+    }
+
+    @Transactional
+    public void deleteRecipe(Long recipeId) {
+        // first delete all recipe ingredient records
+        recipeIngredientsRepository.deleteRecipeIngredientByRecipeId(recipeId);
+        // then delete the recipe
+        recipeRepository.deleteById(recipeId);
     }
 
     private String validateSortOrder(String sortOrder) {

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Transactional
 public class RecipeIngredientService {
     private final IngredientService ingredientService;
     private final IngredientRepository ingredientRepository;
@@ -28,6 +27,7 @@ public class RecipeIngredientService {
         this.recipeIngredientsRepository = recipeIngredientsRepository;
     }
 
+    @Transactional
     public void saveRecipeIngredients(RecipeDTO recipeDTO) {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setRecipe(RecipeMapper.INSTANCE.toEntity(recipeDTO));

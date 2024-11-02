@@ -39,4 +39,10 @@ public class RecipeController {
         RecipeDTO savedRecipe = recipeService.saveRecipe(recipeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRecipe);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RecipeDTO> deleteRecipe(@PathVariable("id") Long id) {
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
+    }
 }
