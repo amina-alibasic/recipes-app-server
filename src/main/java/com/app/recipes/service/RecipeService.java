@@ -1,13 +1,11 @@
 package com.app.recipes.service;
 
-import com.app.recipes.dto.CategoryDTO;
 import com.app.recipes.dto.RecipeDTO;
 import com.app.recipes.entity.Category;
 import com.app.recipes.entity.Recipe;
 import com.app.recipes.helper.CategoryMapper;
 import com.app.recipes.helper.RecipeMapper;
 import com.app.recipes.repository.CategoryRepository;
-import com.app.recipes.repository.RecipeIngredientsRepository;
 import com.app.recipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,9 +65,9 @@ public class RecipeService {
             // new category being created with the recipe
             Category category = new Category();
             category.setName(recipeDTO.getCategory().getName());
-            Category newCategory = categoryRepository.save(category);
+            categoryRepository.save(category);
             // set new category to the recipeDTO
-            recipeDTO.setCategory(CategoryMapper.INSTANCE.toDto(newCategory));
+            recipeDTO.setCategory(CategoryMapper.INSTANCE.toDto(category));
         }
         // First save Recipe
         Recipe recipe = new Recipe();
@@ -112,7 +110,7 @@ public class RecipeService {
         if (recipeDTO.getServings() == null || recipeDTO.getServings() < 1) {
             throw new IllegalArgumentException("Servings must be a number greater than 1.");
         }
-        if (recipeDTO.getCategory() == null || recipeDTO.getCategory().getId() == null) {
+        if (recipeDTO.getCategory() == null) {
             throw new IllegalArgumentException("Category must be provided.");
         }
         if (recipeDTO.getPreparationInstruction() == null || recipeDTO.getPreparationInstruction().trim().isEmpty()) {
